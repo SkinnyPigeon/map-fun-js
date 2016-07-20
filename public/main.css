@@ -1,0 +1,13 @@
+body {
+  background-color: #c4d3a0;
+  font-family: helvetica;
+  background-image: url("https://www.transparenttextures.com/patterns/old-map.png");
+
+}
+
+#map {
+  height: 500px;
+  width: 500px;
+  margin: auto;
+}
+
