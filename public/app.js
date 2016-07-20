@@ -7,7 +7,7 @@ window.onload = function () {
     var geoUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=55.704093,13.193582&sensor=false"
     console.log( geoUrl )
     var geoUrl2 = "http://maps.googleapis.com/maps/api/geocode/json?latlng="+55.704093+","+13.193582+"&sensor=false"
-    var geoUrl3 = "http://maps.googleapis.com/maps/api/geocode/json?latlng="+55.943704+","+-3.2130940999999997+"&sensor=false"
+    var geoUrl3 = "http://maps.googleapis.com/maps/api/geocode/json?latlng="+55.943704+","+-3.2130941+"&sensor=false"
 
 
     console.log( geoUrl2 )
@@ -107,6 +107,17 @@ var updateDisplay = function ( selected, map ) {
     map.addInfoWindow( center, country )
 }
 
+var displayAddress = function ( address ) {
+    var you = document.querySelector( '#you' );
+    var display = document.querySelector( 'h3' );
+    var takeABreak = document.querySelector( '#break' );
+    var text = "You are here: " + address
+    var br = '<br>'
+    display.innerHTML = text;
+    takeABreak.innerHTML = br;
+
+}
+
 var GeoLocator = function( map, country ) {
   this.map = map
   this.setCenter = function( map ){
@@ -119,18 +130,24 @@ var GeoLocator = function( map, country ) {
   }
 }
 
-var geoFind = function( latLng ) {
-    console.log( latLng.lat, latLng.lng )
-    var geoUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng="+latLng.lat+","+latLng.lng+"&sensor=false"
-    console.log( geoUrl )
-    var requestGeo = new XMLHttpRequest();
-    requestGeo.open( "GET", geoUrl )
-    var geoString = requestGeo.responseText;
-    console.log( geoString )
-    var address = JSON.parse( geoString );
-    console.log( address )
-    requestGeo.send();
+var geoFind = function(latLng){
+   var url = "http://maps.googleapis.com/maps/api/geocode/json?latlng="+latLng.lat+"," +latLng.lng+ "&sensor=false"
+   var request = new XMLHttpRequest();
+   request.open("GET", url);
+   request.onload = function () {
+       console.log('loaded')
+       if (request.status === 200) {
+           var jsonString = request.responseText;
+           var country = JSON.parse(jsonString);
+           console.log(country.results[0].formatted_address)
+           displayAddress( country.results[0].formatted_address )
+       }
+   }
+   request.send();
+
 }
+
+
 
 var Map = function( latLng, zoom ) {
   this.googleMap = new google.maps.Map( document.getElementById( "map" ), {
