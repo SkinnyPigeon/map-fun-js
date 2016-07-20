@@ -1,24 +1,42 @@
+var geoUrl = ""
+
 
 window.onload = function () {
     var url = 'https://restcountries.eu/rest/v1'
 
+    var geoUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=55.704093,13.193582&sensor=false"
+    console.log( geoUrl )
+    var geoUrl2 = "http://maps.googleapis.com/maps/api/geocode/json?latlng="+55.704093+","+13.193582+"&sensor=false"
+    console.log( geoUrl2 )
+
+
     var request = new XMLHttpRequest();
+    var requestGeo = new XMLHttpRequest();
+    var requestGeo2 = new XMLHttpRequest();
     request.open("GET", url);
+    requestGeo.open( "GET", geoUrl )
+    requestGeo2.open( "GET", geoUrl2 )
     request.onload = function () {
         if (request.status === 200) {
 
             var jsonString = request.responseText;
+            var geoString = requestGeo.responseText;
+            var geoString2 = requestGeo2.responseText;
             var countries = JSON.parse(jsonString);
+            var country = JSON.parse( geoString );
+            var country2 = JSON.parse( geoString2 );
+            console.log( country )
+            console.log( country2.results[0].formatted_address )
             main(countries);
             console.log( countries[0] )
-
-            // console.log( countryLocal )
         }
     }
     request.send();
+    requestGeo.send()
+    requestGeo2.send()
 };
 
-var main = function (countries) {
+var main = function (countries, country ) {
 
     var cached = localStorage.getItem("selectedCountry");
     var selected = countries[0];
@@ -33,13 +51,14 @@ var main = function (countries) {
     document.querySelector('#info').style.display = 'block';
 
     var button = document.getElementById( "find-me" );
-    button.onclick = function( event ) {
+    button.onclick = function( event, country ) {
         find( map )
     }
+
 }
-var find = function( map ){
+var find = function( map, country ){
     var location = new GeoLocator( map ) 
-    location.setCenter( map ) 
+    location.setCenter( map, country ) 
     // updateDisplay( pos, map )  
 }
 
@@ -79,7 +98,7 @@ var updateDisplay = function ( selected, map ) {
     map.addInfoWindow( center, country )
 }
 
-var GeoLocator = function( map ) {
+var GeoLocator = function( map, country ) {
   this.map = map
   this.setCenter = function( map ){
     navigator.geolocation.getCurrentPosition(  function( position ) { 
@@ -93,14 +112,14 @@ var GeoLocator = function( map ) {
 
 var geoFind = function( latLng ) {
     console.log( latLng.lat )
-    var geo = "http://maps.googleapis.com/maps/api/geocode/json?latlng="+latLng.lat+","+latLng.lng+"&sensor=false"
-    console.log( geo )
-    var request2 = new XMLHttpRequest();
-    request2.open( "GET", geo )
-    request2.send();
-    var countryString = request2.responseText;
-    console.log( countryString )
-    var countryLocal = JSON.parse( countryString );
+    var geoUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=55.704093,13.193582&sensor=false"
+    console.log( geoUrl )
+    var requestGeo = new XMLHttpRequest();
+    requestGeo.open( "GET", geoUrl )
+    requestGeo.send();
+    var geoString = requestGeo.responseText;
+    var country = JSON.parse( geoString );
+    console.log( country )
 }
 
 var Map = function( latLng, zoom ) {
