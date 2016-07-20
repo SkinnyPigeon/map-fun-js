@@ -7,26 +7,34 @@ window.onload = function () {
     var geoUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=55.704093,13.193582&sensor=false"
     console.log( geoUrl )
     var geoUrl2 = "http://maps.googleapis.com/maps/api/geocode/json?latlng="+55.704093+","+13.193582+"&sensor=false"
+    var geoUrl3 = "http://maps.googleapis.com/maps/api/geocode/json?latlng="+55.943704+","+-3.2130940999999997+"&sensor=false"
+
+
     console.log( geoUrl2 )
 
 
     var request = new XMLHttpRequest();
     var requestGeo = new XMLHttpRequest();
     var requestGeo2 = new XMLHttpRequest();
+    var requestGeo3 = new XMLHttpRequest();
     request.open("GET", url);
     requestGeo.open( "GET", geoUrl )
     requestGeo2.open( "GET", geoUrl2 )
+    requestGeo3.open( "GET", geoUrl3 )
     request.onload = function () {
         if (request.status === 200) {
 
             var jsonString = request.responseText;
             var geoString = requestGeo.responseText;
             var geoString2 = requestGeo2.responseText;
+            var geoString3 = requestGeo3.responseText;
             var countries = JSON.parse(jsonString);
             var country = JSON.parse( geoString );
             var country2 = JSON.parse( geoString2 );
+            var country3 = JSON.parse( geoString3 );
             console.log( country )
             console.log( country2.results[0].formatted_address )
+            console.log( country3.results[0].formatted_address )
             main(countries);
             console.log( countries[0] )
         }
@@ -34,6 +42,7 @@ window.onload = function () {
     request.send();
     requestGeo.send()
     requestGeo2.send()
+    requestGeo3.send()
 };
 
 var main = function (countries, country ) {
@@ -111,8 +120,8 @@ var GeoLocator = function( map, country ) {
 }
 
 var geoFind = function( latLng ) {
-    console.log( latLng.lat )
-    var geoUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng=55.704093,13.193582&sensor=false"
+    console.log( latLng.lat, latLng.lng )
+    var geoUrl = "http://maps.googleapis.com/maps/api/geocode/json?latlng="+latLng.lat+","+latLng.lng+"&sensor=false"
     console.log( geoUrl )
     var requestGeo = new XMLHttpRequest();
     requestGeo.open( "GET", geoUrl )
