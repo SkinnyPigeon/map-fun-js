@@ -116,10 +116,11 @@ var geoFind = function( latLng ) {
     console.log( geoUrl )
     var requestGeo = new XMLHttpRequest();
     requestGeo.open( "GET", geoUrl )
-    requestGeo.send();
     var geoString = requestGeo.responseText;
-    var country = JSON.parse( geoString );
-    console.log( country )
+    console.log( geoString )
+    var address = JSON.parse( geoString );
+    console.log( address )
+    requestGeo.send();
 }
 
 var Map = function( latLng, zoom ) {
